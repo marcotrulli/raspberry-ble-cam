@@ -8,7 +8,7 @@ from bluepy.btle import Peripheral
 MAC_ADDRESS = "48:87:2D:6C:FB:0C"       # MAC del modulo BLE
 CHAR_UUID = "0000FFE1-0000-1000-8000-00805F9B34FB"  # UUID caratteristica distanza
 DISTANCE_THRESHOLD = 30                 # soglia in cm per scattare foto
-ESP32_CAM_IP = "192.168.1.50"          # IP della tua ESP32-CAM
+ESP32_CAM_IP = "192.168.1.36"          # IP della tua ESP32-CAM
 PHOTO_PATH = "foto.jpg"
 
 TELEGRAM_TOKEN = "8270696186:AAEHRIPXbWpc_MnZ9kjMTmPDE2XO85Kbud0"
@@ -80,3 +80,4 @@ while True:
     except Exception as e:
         print("Errore durante la lettura BLE:", e)
         time.sleep(1)
+
