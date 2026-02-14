@@ -1,14 +1,14 @@
-# raspberry_ble_cam.py
+# raspberry_ble_cam1.py
 import time
 import requests
 import cv2
-from bluepy.btle import Peripheral
+from bluepy.btle import Peripheral, ADDR_TYPE_RANDOM, BTLEException
 
 # ---------------- CONFIGURAZIONE ----------------
 MAC_ADDRESS = "48:87:2D:6C:FB:0C"       # MAC del modulo BLE
 CHAR_UUID = "0000FFE1-0000-1000-8000-00805F9B34FB"  # UUID caratteristica distanza
 DISTANCE_THRESHOLD = 30                 # soglia in cm per scattare foto
-ESP32_CAM_IP = "192.168.1.36"          # IP della tua ESP32-CAM
+ESP32_CAM_IP = "192.168.1.50"          # IP della tua ESP32-CAM
 PHOTO_PATH = "foto.jpg"
 
 TELEGRAM_TOKEN = "8270696186:AAEHRIPXbWpc_MnZ9kjMTmPDE2XO85Kbud0"
@@ -50,11 +50,12 @@ def invia_telegram(foto_path):
 # ---------------- CONNESSIONE BLE ----------------
 print("Connettendo al modulo BLE...")
 try:
-    peripheral = Peripheral(MAC_ADDRESS)
+    peripheral = Peripheral(MAC_ADDRESS, addrType=ADDR_TYPE_RANDOM)
     char = peripheral.getCharacteristics(uuid=CHAR_UUID)[0]
     print("Connesso al BLE!")
-except Exception as e:
+except BTLEException as e:
     print("Errore connessione BLE:", e)
+    print("➡ Controlla che il dispositivo sia acceso, vicino al Pi e non connesso ad altri dispositivi.")
     exit()
 
 # ---------------- LOOP PRINCIPALE ----------------
@@ -77,7 +78,11 @@ while True:
 
         time.sleep(0.2)
 
-    except Exception as e:
+    except BTLEException as e:
         print("Errore durante la lettura BLE:", e)
+        print("➡ Verifica che il dispositivo sia acceso e vicino al Pi")
         time.sleep(1)
 
+    except Exception as e:
+        print("Errore generico:", e)
+        time.sleep(1)
